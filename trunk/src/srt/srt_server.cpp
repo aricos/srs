@@ -236,7 +236,7 @@ void srt_server::srt_handle_connection(SRT_SOCKSTATUS status, SRTSOCKET input_fd
         else if (srt_conn_ptr->get_mode() == PUSH_SRT_MODE)
         {
             conn_event = SRT_EPOLL_IN | SRT_EPOLL_ERR;
-            _srs_hybrid->srs()->instance()->
+            // _srs_hybrid->srs()->instance()->
             // http_hooks_on_srt(streamid.c_str(), vhost_str.c_str());
         }
         else
