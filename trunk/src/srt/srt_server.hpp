@@ -33,27 +33,31 @@
 
 #include <srs_app_hybrid.hpp>
 
+class SrsHttpHooks;
 class srt_handle;
 
-class srt_server {
+class srt_server
+{
 public:
     srt_server(unsigned short port);
     ~srt_server();
 
-    int start();//init srt handl and create srt main thread loop
-    void stop();//stop srt main thread loop
+    int start(); //init srt handl and create srt main thread loop
+    void stop(); //stop srt main thread loop
 
 private:
     //init srt socket and srt epoll
     int init_srt();
     int init_srt_parameter();
-    
+
     //srt main epoll loop
-    void on_work();
+    srs_error_t on_work();
     //accept new srt connection
-    void srt_handle_connection(SRT_SOCKSTATUS status, SRTSOCKET input_fd, const std::string& dscr);
+    void srt_handle_connection(SRT_SOCKSTATUS status, SRTSOCKET input_fd, const std::string &dscr);
     //get srt data read/write
-    void srt_handle_data(SRT_SOCKSTATUS status, SRTSOCKET input_fd, const std::string& dscr);
+    void srt_handle_data(SRT_SOCKSTATUS status, SRTSOCKET input_fd, const std::string &dscr);
+
+    void http_hooks_on_srt(std::string streamid, std::string vhost_str);
 
 private:
     unsigned short _listen_port;
@@ -70,13 +74,15 @@ class SrtServerAdapter : public ISrsHybridServer
 {
 private:
     SRT_SERVER_PTR srt_ptr;
+
 public:
     SrtServerAdapter();
     virtual ~SrtServerAdapter();
+
 public:
     virtual srs_error_t initialize();
     virtual srs_error_t run();
     virtual void stop();
 };
 
-#endif//SRT_SERVER_H
+#endif //SRT_SERVER_H
